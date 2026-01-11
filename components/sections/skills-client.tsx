@@ -1,0 +1,97 @@
+"use client"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useLanguage } from "@/components/providers/language-provider"
+import { motion } from "framer-motion"
+
+// Define the type for the skills prop
+type Skill = {
+    id: string
+    name: string
+    category: string
+    proficiency: number
+}
+
+interface SkillsClientProps {
+    skills: Skill[]
+}
+
+export function SkillsClient({ skills }: SkillsClientProps) {
+    const { t } = useLanguage()
+
+    // Group skills
+    const groupedSkills = skills.reduce((acc, skill) => {
+        (acc[skill.category] = acc[skill.category] || []).push(skill)
+        return acc
+    }, {} as Record<string, Skill[]>)
+
+    return (
+        <section id="skills" className="min-h-screen flex flex-col justify-center py-24 px-4 container mx-auto">
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ duration: 0.8 }}
+                className="text-center mb-16 space-y-4"
+            >
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-normal bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 text-shadow-sm">
+                    {t.skills.title}
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-shadow-sm">
+                    {t.skills.subtitle}
+                </p>
+            </motion.div>
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {Object.entries(groupedSkills).map(([category, items], idx) => (
+                    <motion.div
+                        key={category}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: false }}
+                        transition={{ duration: 0.5, delay: idx * 0.1 }}
+                        className="space-y-4"
+                    >
+                        <div className="relative group">
+                            {/* Decorative blur */}
+                            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl blur-lg transition duration-500 group-hover:duration-200" />
+
+                            <Card className="relative bg-card/50 backdrop-blur-sm border-white/10 h-full">
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-bold text-primary tracking-wide uppercase text-sm">
+                                        {category}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    {items.map((skill) => (
+                                        <div key={skill.id} className="space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="font-medium">{skill.name}</span>
+                                                <span className="text-muted-foreground">{skill.proficiency}%</span>
+                                            </div>
+                                            <div className="h-2 w-full bg-secondary/50 rounded-full overflow-hidden">
+                                                <motion.div
+                                                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                                                    initial={{ width: 0 }}
+                                                    whileInView={{ width: `${skill.proficiency}%` }}
+                                                    transition={{ duration: 1, delay: 0.5 }}
+                                                    viewport={{ once: true }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
+
+            {skills.length === 0 && (
+                <div className="text-center py-20 text-muted-foreground">
+                    <p>{t.skills.noSkills}</p>
+                </div>
+            )}
+        </section>
+    )
+}
