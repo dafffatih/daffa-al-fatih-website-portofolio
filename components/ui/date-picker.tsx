@@ -1,51 +1,26 @@
 "use client"
 
-import * as React from "react"
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
 
 interface DatePickerProps {
     date?: Date
     setDate: (date?: Date) => void
-    disabled?: boolean
     className?: string
-    placeholder?: string
+    disabled?: boolean
 }
 
-export function DatePicker({ date, setDate, disabled, className, placeholder = "Pick a date" }: DatePickerProps) {
+export function DatePicker({ date, setDate, className, disabled }: DatePickerProps) {
     return (
-        <Popover>
-            <PopoverTrigger asChild>
-                <Button
-                    variant={"outline"}
-                    disabled={disabled}
-                    className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !date && "text-muted-foreground",
-                        className
-                    )}
-                >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>{placeholder}</span>}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                />
-            </PopoverContent>
-        </Popover>
+        <input
+            type="date"
+            disabled={disabled}
+            className={cn(
+                "w-full rounded-md border border-input bg-black px-3 py-2 text-sm text-white ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                "[&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert",
+                className
+            )}
+            value={date ? date.toISOString().split('T')[0] : ''}
+            onChange={(e) => setDate(e.target.valueAsDate || undefined)}
+        />
     )
 }
