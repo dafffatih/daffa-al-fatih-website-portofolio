@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: "/",
             disallow: "/admin/",
         },
-        sitemap: "https://example.com/sitemap.xml", // Replace with actual domain
+        sitemap: `${process.env.NEXTAUTH_URL || "https://example.com"}/sitemap.xml`,
     }
 }

@@ -4,7 +4,7 @@ require("dotenv").config()
 
 const prisma = new PrismaClient()
 
-console.log("Seeding with LibSQL adapter...")
+console.log("Seeding database...")
 
 async function main() {
     const email = "admin@example.com"
