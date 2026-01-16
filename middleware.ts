@@ -1,9 +1,13 @@
 import NextAuth from "next-auth"
 import { authConfig } from "./auth.config"
+import { NextRequest } from "next/server"
 
-export const { auth: middleware } = NextAuth(authConfig)
+const { auth } = NextAuth(authConfig)
+
+export function middleware(request: NextRequest) {
+  return auth(request as any)
+}
 
 export const config = {
-    // Matcher ensuring /admin and all subpaths are caught
-    matcher: ["/admin", "/admin/(.*)"],
+  matcher: ["/admin", "/admin/(.*)"],
 }
