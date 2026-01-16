@@ -29,7 +29,9 @@ interface GradientLayer {
 
 export function GradientParticles() {
     const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 })
-    const [smoothPosition, setSmoothPosition] = useState<MousePosition>({ x: 0, y: 0 })
+    const [trailPositions, setTrailPositions] = useState<MousePosition[]>(
+        Array(12).fill({ x: 0, y: 0 })
+    )
     const animationRef = useRef<number | null>(null)
 
     // Layered gradient backgrounds for depth - MORE VISIBLE with vibrant colors
@@ -80,17 +82,30 @@ export function GradientParticles() {
         return () => window.removeEventListener("mousemove", handleMouseMove)
     }, [])
 
-    // Smooth lerp animation for mouse follower
+    // Smooth lerp animation for mouse follower with trail
     useEffect(() => {
         const lerp = (start: number, end: number, factor: number) => {
             return start + (end - start) * factor
         }
 
         const animate = () => {
-            setSmoothPosition(prev => ({
-                x: lerp(prev.x, mousePosition.x, 0.05),
-                y: lerp(prev.y, mousePosition.y, 0.05)
-            }))
+            setTrailPositions(prev => {
+                const newPositions = [...prev]
+                // First position follows mouse directly with NO delay
+                newPositions[0] = {
+                    x: mousePosition.x,
+                    y: mousePosition.y
+                }
+                // Each subsequent position follows the one before it with decreasing speed
+                for (let i = 1; i < newPositions.length; i++) {
+                    const speed = Math.max(0.25 - i * 0.012, 0.08) // Faster speed for tighter trail
+                    newPositions[i] = {
+                        x: lerp(prev[i].x, newPositions[i - 1].x, speed),
+                        y: lerp(prev[i].y, newPositions[i - 1].y, speed)
+                    }
+                }
+                return newPositions
+            })
             animationRef.current = requestAnimationFrame(animate)
         }
 
@@ -162,49 +177,36 @@ export function GradientParticles() {
                 ))}
             </div>
 
-            {/* Floating sparkle particles (smaller, faster fade) */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {Array.from({ length: 20 }, (_, i) => (
-                    <motion.div
-                        key={`sparkle-${i}`}
-                        className="absolute rounded-full bg-white"
-                        style={{
-                            width: Math.random() * 2 + 1,
-                            height: Math.random() * 2 + 1,
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                            boxShadow: "0 0 4px rgba(255,255,255,0.8)",
-                        }}
-                        animate={{
-                            opacity: [0, 0.8, 0],
-                            scale: [0.5, 1.2, 0.5],
-                        }}
-                        transition={{
-                            duration: Math.random() * 3 + 2,
-                            delay: Math.random() * 5,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                        }}
-                    />
-                ))}
-            </div>
+            {/* Mouse follower gradient with trail effect */}
+            {trailPositions.map((pos, index) => {
+                const size = Math.max(200 - index * 12, 60) // Decreasing size for trail, min 60px
+                const opacity = Math.max(0.15 - index * 0.010, 0.02) // Decreasing opacity for trail
+                const blur = 35 + index * 3 // Increasing blur for trail
 
-            {/* Subtle mouse follower gradient */}
-            <motion.div
-                className="fixed pointer-events-none z-[1]"
-                style={{
-                    left: smoothPosition.x - 100,
-                    top: smoothPosition.y - 100,
-                }}
-            >
-                <div
-                    className="w-[200px] h-[200px] rounded-full"
-                    style={{
-                        background: "radial-gradient(circle, rgba(244,114,182,0.08) 0%, rgba(192,132,252,0.05) 40%, transparent 70%)",
-                        filter: "blur(40px)",
-                    }}
-                />
-            </motion.div>
+                return (
+                    <motion.div
+                        key={`trail-${index}`}
+                        className="fixed pointer-events-none z-[1]"
+                        style={{
+                            left: pos.x - size / 2,
+                            top: pos.y - size / 2,
+                        }}
+                    >
+                        <div
+                            className="rounded-full"
+                            style={{
+                                width: size,
+                                height: size,
+                                background: index === 0
+                                    ? "radial-gradient(circle, rgba(244,114,182,0.15) 0%, rgba(192,132,252,0.10) 40%, transparent 70%)"
+                                    : `radial-gradient(circle, rgba(192,132,252,${opacity}) 0%, rgba(139,92,246,${opacity * 0.6}) 40%, transparent 70%)`,
+                                filter: `blur(${blur}px)`,
+                            }}
+                        />
+                    </motion.div>
+                )
+            })}
         </>
     )
 }
+
