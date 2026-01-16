@@ -3,6 +3,7 @@
 import { useRef, useMemo } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Points, PointMaterial } from "@react-three/drei"
+import { GradientParticles } from "./gradient-particles"
 
 function StarField(props: any) {
     const ref = useRef<any>(null)
@@ -83,11 +84,17 @@ function Stars(props: any) {
 export function SpaceBackground() {
     return (
         <div className="fixed inset-0 z-[-1] bg-[#050508]">
+            {/* Gradient particles behind stars */}
+            <GradientParticles />
+
+            {/* 3D Star field */}
             <Canvas camera={{ position: [0, 0, 2] }}>
                 <StarField />
                 <Stars />
                 <ambientLight intensity={0.5} />
             </Canvas>
+
+            {/* Bottom gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#050508] via-transparent to-transparent opacity-80" />
         </div>
     )

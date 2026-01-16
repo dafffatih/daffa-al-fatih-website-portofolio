@@ -23,16 +23,16 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
     return (
         <section id="experience" className="min-h-screen flex flex-col justify-center py-24 px-4 container mx-auto">
             <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: false, margin: "-100px" }}
                 transition={{ duration: 0.8 }}
                 className="text-center mb-16 space-y-4"
             >
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-normal bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600 text-shadow-sm">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-normal bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600 text-shadow-sm">
                     {t.experience.title}
                 </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-shadow-sm">
+                <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto text-shadow-sm">
                     {t.experience.subtitle}
                 </p>
             </motion.div>
@@ -53,8 +53,8 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
                         return (
                             <motion.div
                                 key={exp.id}
-                                initial={{ opacity: 0, x: isEven ? -50 : 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
+                                initial={{ opacity: 0, x: isEven ? -50 : 50, filter: "blur(8px)" }}
+                                whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                                 viewport={{ once: false, margin: "-50px" }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 className={cn(

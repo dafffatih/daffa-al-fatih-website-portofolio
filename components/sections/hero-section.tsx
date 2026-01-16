@@ -12,12 +12,12 @@ export function HeroSection() {
     return (
         <section id="home" className="min-h-screen flex flex-col items-center justify-center p-4 pt-20 relative overflow-hidden">
             {/* Content wrapper with z-index to sit above background */}
-            <div className="z-10 flex flex-col items-center text-center max-w-4xl mx-auto gap-8">
+            <div className="z-10 flex flex-col items-center text-center max-w-4xl mx-auto gap-6 md:gap-8 px-4">
 
                 {/* Animated Headline */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     viewport={{ once: false, amount: 0.5 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="space-y-4"
@@ -25,28 +25,28 @@ export function HeroSection() {
                     <h2 className="text-xl md:text-2xl font-medium text-primary tracking-wide uppercase text-shadow-sm">
                         {t.home.hero.subtitle}
                     </h2>
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50 text-shadow-sm">
+                    <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/50 text-shadow-sm">
                         {t.home.hero.title}
                     </h1>
                 </motion.div>
 
                 {/* Description */}
                 <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
+                    initial={{ opacity: 0, filter: "blur(8px)" }}
+                    whileInView={{ opacity: 1, filter: "blur(0px)" }}
                     viewport={{ once: false, amount: 0.5 }}
-                    transition={{ delay: 0.2, duration: 1 }}
-                    className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed text-shadow-sm"
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                    className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed text-shadow-sm px-2"
                 >
                     {t.home.hero.description}
                 </motion.p>
 
                 {/* CTA Buttons */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
+                    whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                     viewport={{ once: false, amount: 0.5 }}
-                    transition={{ delay: 0.4, duration: 0.5 }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
                     className="flex flex-col sm:flex-row gap-4 mt-8"
                 >
                     <ScrollLink

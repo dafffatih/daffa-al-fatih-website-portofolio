@@ -9,18 +9,20 @@ export function AboutSection() {
     const { t } = useLanguage()
 
     const containerVariants = {
-        hidden: { opacity: 0 },
+        hidden: { opacity: 0, filter: "blur(10px)" },
         visible: {
             opacity: 1,
+            filter: "blur(0px)",
             transition: {
-                staggerChildren: 0.1
+                staggerChildren: 0.1,
+                duration: 0.5,
             }
         }
     }
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 }
+        hidden: { opacity: 0, y: 20, filter: "blur(8px)" },
+        visible: { opacity: 1, y: 0, filter: "blur(0px)" }
     }
 
     return (
@@ -36,7 +38,7 @@ export function AboutSection() {
                 <div className="text-center space-y-4">
                     <motion.h2
                         variants={itemVariants}
-                        className="text-4xl md:text-5xl font-bold tracking-tight leading-normal bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-emerald-500 text-shadow-sm"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-normal bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-emerald-500 text-shadow-sm"
                     >
                         {t.about.title}
                     </motion.h2>
@@ -49,13 +51,13 @@ export function AboutSection() {
                 </div>
 
                 {/* Profile & Bio */}
-                <div className="grid md:grid-cols-12 gap-12 items-center">
+                <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center">
                     {/* Image Column */}
                     <motion.div
                         variants={itemVariants}
                         className="md:col-span-5 flex justify-center"
                     >
-                        <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-secondary shadow-2xl relative group">
+                        <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-secondary shadow-2xl relative group">
                             {/* Glow effect */}
                             <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             <Image
@@ -72,8 +74,8 @@ export function AboutSection() {
                         variants={itemVariants}
                         className="md:col-span-7 space-y-6"
                     >
-                        <h3 className="text-3xl font-bold">{t.home.hero.title}</h3>
-                        <p className="text-lg text-muted-foreground leading-relaxed">
+                        <h3 className="text-2xl sm:text-3xl font-bold text-center md:text-left">DAFFA MUHAMMAD AL FATIH</h3>
+                        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed text-center md:text-left">
                             {t.about.bio}
                         </p>
 

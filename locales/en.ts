@@ -10,7 +10,7 @@ export const en = {
     },
     home: {
         hero: {
-            title: "DAFFA AL FATIH",
+            title: "DAFFA FATIH",
             subtitle: "Fullstack developer & AI Automation",
             description: "Building scalable web applications and intelligent automation systems. Specializing in full-stack development, AI integration, and workflow optimization.",
             cta: "View Projects",

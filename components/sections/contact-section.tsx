@@ -55,20 +55,20 @@ export function ContactSection() {
 
     return (
         <section id="contact" className="min-h-screen flex flex-col justify-center py-24 px-4 container mx-auto relative">
-            <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto items-start z-10">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto items-start z-10">
                 {/* Left Side: Info */}
                 <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, x: -50, filter: "blur(10px)" }}
+                    whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                     viewport={{ once: false }}
                     transition={{ duration: 0.8 }}
                     className="space-y-8"
                 >
                     <div className="space-y-4">
-                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 text-shadow-sm">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 text-shadow-sm">
                             {t.contact.title}
                         </h2>
-                        <p className="text-lg text-muted-foreground leading-relaxed text-shadow-sm">
+                        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed text-shadow-sm">
                             {t.contact.subtitle}
                         </p>
                     </div>
@@ -103,8 +103,8 @@ export function ContactSection() {
 
                 {/* Right Side: Form */}
                 <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, x: 50, filter: "blur(10px)" }}
+                    whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                     viewport={{ once: false }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                 >
