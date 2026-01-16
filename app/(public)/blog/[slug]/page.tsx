@@ -20,9 +20,9 @@ export default async function BlogPostPage(props: { params: Promise<{ slug: stri
 
     return (
         <div className="min-h-screen pt-24 pb-12 px-4 container mx-auto">
-            <Link href="/blog">
+            <Link href="/">
                 <Button variant="ghost" size="sm" className="mb-8 gap-2 text-muted-foreground hover:text-foreground">
-                    <ArrowLeft className="w-4 h-4" /> Back to Blog
+                    <ArrowLeft className="w-4 h-4" /> Back to Home
                 </Button>
             </Link>
 
