@@ -71,7 +71,7 @@ model Skill {
   name      String
   category  String   // e.g., Frontend, Backend, Tools
   icon      String?  // Lucide icon name or image URL
-  proficiency Int?   // 0-100
+  proficiency Int   // 0-100
   createdAt DateTime @default(now())
 }
 
