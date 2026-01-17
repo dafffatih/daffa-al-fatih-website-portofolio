@@ -12,14 +12,14 @@ export const en = {
         hero: {
             title: "DAFFA FATIH",
             subtitle: "Fullstack developer & AI Automation",
-            description: "Building scalable web applications and intelligent automation systems. Specializing in full-stack development, AI integration, and workflow optimization.",
+            description: "Helping businesses elevate their branding through high-impact landing pages while building scalable web systems and smart automation to make daily operations easier and more efficient.",
             cta: "View Projects",
         },
     },
     about: {
         title: "About Me",
         subtitle: "A glimpse into who I am and what I do.",
-        bio: "A dedicated Computer Science student at University of Lampung with a passion for building immersive digital experiences. Experienced in backend development, database management, and team leadership.",
+        bio: "A Computer Science student at the University of Lampung with a strong focus on building practical, scalable digital solutions. Experienced in backend development, database management, and leading teams to deliver reliable systems that solve real business problems.",
         education: {
             title: "Education",
             items: [

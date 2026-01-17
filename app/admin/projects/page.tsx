@@ -3,7 +3,9 @@ import Link from "next/link"
 import { prisma } from "@/lib/prisma"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Pencil, Trash2, ExternalLink } from "lucide-react"
+import { Plus, Pencil } from "lucide-react"
+import { deleteProject } from "@/app/actions/admin"
+import { DeleteButton } from "@/components/admin/delete-button"
 
 export default async function AdminProjectsPage() {
     const projects = await prisma.project.findMany({
@@ -54,9 +56,14 @@ export default async function AdminProjectsPage() {
                                         <Pencil className="w-3 h-3" /> Edit
                                     </Button>
                                 </Link>
-                                <Button variant="destructive" size="sm" className="w-9 px-0">
-                                    <Trash2 className="w-3 h-3" />
-                                </Button>
+                                <DeleteButton
+                                    id={project.id}
+                                    action={deleteProject}
+                                    title={project.title}
+                                    variant="destructive"
+                                    size="sm"
+                                    className="w-9 px-0"
+                                />
                             </div>
                         </CardContent>
                     </Card>

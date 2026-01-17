@@ -1,6 +1,3 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import {
     Table,
@@ -11,46 +8,17 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Mail } from "lucide-react"
+import { Mail } from "lucide-react"
+import { prisma } from "@/lib/prisma"
+import { deleteMessage } from "@/app/actions/admin"
+import { DeleteButton } from "@/components/admin/delete-button"
 
-type Message = {
-    id: string
-    name: string
-    email: string
-    message: string
-    createdAt: string
-    read: boolean
-}
-
-export default function MessagesPage() {
-    const [messages, setMessages] = useState<Message[]>([])
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const res = await fetch("/api/admin/messages")
-                if (res.ok) {
-                    const data = await res.json()
-                    setMessages(data)
-                }
-            } catch (error) {
-                console.error("Failed to fetch messages", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchMessages()
-    }, [])
-
-    if (loading) {
-        return (
-            <div className="flex h-[50vh] items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-        )
-    }
+export default async function MessagesPage() {
+    const messages = await prisma.message.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
+    })
 
     return (
         <div className="space-y-8 text-foreground">
@@ -83,6 +51,7 @@ export default function MessagesPage() {
                                     <TableHead className="text-muted-foreground">Name</TableHead>
                                     <TableHead className="text-muted-foreground">Email</TableHead>
                                     <TableHead className="text-muted-foreground">Message</TableHead>
+                                    <TableHead className="text-muted-foreground w-[100px]">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -95,6 +64,16 @@ export default function MessagesPage() {
                                         <TableCell>{msg.email}</TableCell>
                                         <TableCell className="max-w-md truncate" title={msg.message}>
                                             {msg.message}
+                                        </TableCell>
+                                        <TableCell>
+                                            <DeleteButton
+                                                id={msg.id}
+                                                action={deleteMessage}
+                                                title={`message from ${msg.name}`}
+                                                className="h-8 w-8 p-0"
+                                                variant="ghost"
+                                                size="icon"
+                                            />
                                         </TableCell>
                                     </TableRow>
                                 ))}

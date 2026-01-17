@@ -3,7 +3,9 @@ import Link from "next/link"
 import { prisma } from "@/lib/prisma"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Pencil, Trash2, Calendar } from "lucide-react"
+import { Plus, Pencil, Calendar } from "lucide-react"
+import { deleteExperience } from "@/app/actions/admin"
+import { DeleteButton } from "@/components/admin/delete-button"
 
 export default async function AdminExperiencePage() {
     const experiences = await prisma.experience.findMany({
@@ -43,9 +45,14 @@ export default async function AdminExperiencePage() {
                                         <Pencil className="w-4 h-4" /> Edit
                                     </Button>
                                 </Link>
-                                <Button variant="destructive" size="sm" className="gap-2">
-                                    <Trash2 className="w-4 h-4" />
-                                </Button>
+                                <DeleteButton
+                                    id={exp.id}
+                                    action={deleteExperience}
+                                    title={`${exp.position} at ${exp.company}`}
+                                    variant="destructive"
+                                    size="sm"
+                                    className="gap-2"
+                                />
                             </div>
                         </CardContent>
                     </Card>

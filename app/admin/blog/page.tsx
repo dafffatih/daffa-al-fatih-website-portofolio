@@ -3,7 +3,9 @@ import Link from "next/link"
 import { prisma } from "@/lib/prisma"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Pencil, Trash2, Eye } from "lucide-react"
+import { Plus, Pencil, Eye } from "lucide-react"
+import { deletePost } from "@/app/actions/admin"
+import { DeleteButton } from "@/components/admin/delete-button"
 
 export default async function AdminBlogPage() {
     const posts = await prisma.post.findMany({
@@ -47,9 +49,14 @@ export default async function AdminBlogPage() {
                                             <Pencil className="w-4 h-4" />
                                         </Button>
                                     </Link>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10">
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
+                                    <DeleteButton
+                                        id={post.id}
+                                        action={deletePost}
+                                        title={post.title}
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                                    />
                                 </div>
                             </div>
                         </CardContent>

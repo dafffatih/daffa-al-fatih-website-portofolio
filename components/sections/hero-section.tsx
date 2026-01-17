@@ -10,7 +10,7 @@ import { useState } from "react"
 // Floating tech icons for background decoration
 const floatingIcons = [
     { Icon: Code2, delay: 0, x: -200, y: -100 },
-    { Icon: Database, delay: 0.5, x: 200, y: -80 },
+    { Icon: Database, delay: 0.5, x: 150, y: -140 },
     { Icon: Cpu, delay: 1, x: -180, y: 120 },
     { Icon: Sparkles, delay: 1.5, x: 220, y: 100 },
 ]
@@ -21,7 +21,7 @@ export function HeroSection() {
     return (
         <section id="home" className="min-h-screen flex flex-col items-center justify-center p-4 pt-20 relative overflow-hidden">
             {/* Floating Tech Icons - Background Decoration */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
                 {floatingIcons.map(({ Icon, delay, x, y }, index) => (
                     <motion.div
                         key={index}
@@ -50,7 +50,7 @@ export function HeroSection() {
                                 ease: "easeInOut"
                             }}
                         >
-                            <Icon className="w-12 h-12 md:w-16 md:h-16 text-gray-700" />
+                            <Icon className="w-12 h-12 md:w-16 md:h-16 text-white-700" />
                         </motion.div>
                     </motion.div>
                 ))}
@@ -95,7 +95,7 @@ export function HeroSection() {
             </div>
 
             {/* Content wrapper with z-index to sit above background */}
-            <div className="z-10 flex flex-col items-center text-center max-w-4xl mx-auto gap-6 md:gap-8 px-4">
+            <div className="z-10 flex flex-col items-center text-center max-w-5xl mx-auto gap-6 md:gap-8 px-4">
 
                 {/* Animated Headline */}
                 <motion.div

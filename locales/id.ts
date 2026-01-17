@@ -12,14 +12,14 @@ export const id = {
         hero: {
             title: "DAFFA FATIH",
             subtitle: "Fullstack developer & AI Automation",
-            description: "Membangun aplikasi web yang skalabel dan sistem otomatisasi cerdas. Spesialisasi dalam pengembangan full-stack, integrasi AI, dan optimalisasi alur kerja.",
+            description: "Membantu bisnis meningkatkan branding mereka melalui landing page yang berdampak tinggi sembari membangun sistem web yang skalabel dan otomatisasi cerdas untuk membuat operasional sehari-hari lebih mudah dan efisien.",
             cta: "Lihat Proyek",
         },
     },
     about: {
         title: "Tentang Saya",
         subtitle: "Sekilas tentang siapa saya dan apa yang saya lakukan.",
-        bio: "Mahasiswa Ilmu Komputer yang berdedikasi di Universitas Lampung dengan semangat untuk membangun pengalaman digital yang imersif. Berpengalaman dalam pengembangan backend, manajemen basis data, dan kepemimpinan tim.",
+        bio: "Mahasiswa Ilmu Komputer di Universitas Lampung dengan fokus kuat pada membangun solusi digital praktis dan skalabel. Berpengalaman dalam pengembangan backend, manajemen basis data, dan memimpin tim untuk memberikan sistem andal yang memecahkan masalah bisnis nyata.",
         education: {
             title: "Pendidikan",
             items: [

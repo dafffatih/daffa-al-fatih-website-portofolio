@@ -32,7 +32,7 @@ export function AboutSection() {
                 whileInView="visible"
                 viewport={{ once: false, margin: "-100px" }}
                 variants={containerVariants}
-                className="max-w-6xl mx-auto space-y-16"
+                className="max-w-5xl mx-auto space-y-16"
             >
                 {/* Header */}
                 <div className="text-center space-y-4">
