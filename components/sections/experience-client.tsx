@@ -2,7 +2,8 @@
 
 import { cn } from "@/lib/utils"
 import { useLanguage } from "@/components/providers/language-provider"
-import { motion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
+import { useRef } from "react"
 
 type Experience = {
     id: string
@@ -19,6 +20,8 @@ interface ExperienceClientProps {
 
 export function ExperienceClient({ experiences }: ExperienceClientProps) {
     const { t } = useLanguage()
+    const experiencesContainerRef = useRef(null)
+    const isInView = useInView(experiencesContainerRef, { once: false, amount: "some" })
 
     return (
         <section id="experience" className="min-h-screen flex flex-col justify-center py-24 px-4 container mx-auto">
@@ -38,16 +41,36 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
             </motion.div>
 
             <div className="max-w-3xl mx-auto relative">
-                {/* Vertical line - hidden on mobile, visible on md+ */}
-                <motion.div
-                    initial={{ height: 0 }}
-                    whileInView={{ height: "100%" }}
-                    viewport={{ once: false }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }}
-                    className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2 hidden md:block origin-top"
-                />
+                {/* Vertical line - animated gradient glow, hidden when no experiences */}
+                {experiences.length > 0 && (
+                    <motion.div
+                        initial={{ height: 0 }}
+                        animate={{ height: isInView ? "calc(100% - 17rem)" : 0 }}
+                        transition={{ duration: 1.5, ease: "easeInOut" }}
+                        className="absolute left-0 md:left-1/2 -translate-x-1/2 hidden md:block origin-top"
+                        style={{
+                            width: '40px',
+                            top: '0.375rem', // Align with first dot center
+                        }}
+                    >
+                        {/* Gradient glow background - full height */}
+                        <div
+                            className="absolute inset-0 left-1/2 -translate-x-1/2"
+                            style={{
+                                width: '20px',
+                                background: 'linear-gradient(180deg, #3b82f6 0%, #6366f1 15%, #a855f7 30%, #ec4899 45%, #f43f5e 55%, #f97316 70%, #eab308 85%, #facc15 100%)',
+                                filter: 'blur(12px)',
+                                opacity: 0.5,
+                                animation: 'glow-pulse 4s ease-in-out infinite',
+                            }}
+                        />
 
-                <div className="space-y-12">
+                        {/* Base white thin line on top */}
+                        <div className="absolute inset-0 w-px bg-white/80 left-1/2 -translate-x-1/2 rounded-full" />
+                    </motion.div>
+                )}
+
+                <div ref={experiencesContainerRef} className="space-y-12">
                     {experiences.map((exp, index) => {
                         const isEven = index % 2 === 0
                         return (
@@ -101,9 +124,27 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
                 </div>
 
                 {experiences.length === 0 && (
-                    <div className="text-center py-20 text-muted-foreground">
-                        <p>No experience entries yet.</p>
-                    </div>
+                    <motion.div
+                        className="flex flex-col items-center justify-center py-20 text-center"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <motion.div
+                            className="w-24 h-24 mb-6 rounded-full bg-gradient-to-br from-green-400/20 to-emerald-600/20 flex items-center justify-center"
+                            animate={{
+                                scale: [1, 1.05, 1],
+                                rotate: [0, 5, -5, 0]
+                            }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            <svg className="w-12 h-12 text-emerald-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </motion.div>
+                        <p className="text-lg text-muted-foreground mb-2">No experience entries yet</p>
+                        <p className="text-sm text-muted-foreground/60">Experience timeline will appear here once added</p>
+                    </motion.div>
                 )}
             </div>
         </section>

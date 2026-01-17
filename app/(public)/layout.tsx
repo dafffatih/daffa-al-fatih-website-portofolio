@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/navbar";
 import { BackgroundWrapper } from "@/components/backgrounds/background-wrapper";
+import { CustomScrollbar } from "@/components/ui/custom-scrollbar";
 
 export default function PublicLayout({
     children,
@@ -10,6 +11,7 @@ export default function PublicLayout({
         <>
             <BackgroundWrapper />
             <Navbar />
+            <CustomScrollbar />
             {children}
         </>
     );

@@ -73,18 +73,18 @@ export function ContactSection() {
                         </p>
                     </div>
 
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
-                            <div className="h-10 w-10 bg-secondary/50 rounded-full flex items-center justify-center">
-                                <Mail className="w-5 h-5" />
+                    <div className="space-y-4 sm:space-y-6">
+                        <div className="flex items-center gap-3 sm:gap-4 text-muted-foreground hover:text-primary transition-colors">
+                            <div className="h-8 w-8 sm:h-10 sm:w-10 bg-secondary/50 rounded-full flex items-center justify-center shrink-0">
+                                <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
-                            <span className="text-lg">daffamalfatih.3135@gmail.com</span>
+                            <span className="text-sm sm:text-base md:text-lg break-all">daffamalfatih.3135@gmail.com</span>
                         </div>
-                        <div className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
-                            <div className="h-10 w-10 bg-secondary/50 rounded-full flex items-center justify-center">
-                                <MapPin className="w-5 h-5" />
+                        <div className="flex items-center gap-3 sm:gap-4 text-muted-foreground hover:text-primary transition-colors">
+                            <div className="h-8 w-8 sm:h-10 sm:w-10 bg-secondary/50 rounded-full flex items-center justify-center shrink-0">
+                                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
                             </div>
-                            <span className="text-lg">{t.contact.info.location}</span>
+                            <span className="text-sm sm:text-base md:text-lg break-words">{t.contact.info.location}</span>
                         </div>
                     </div>
 

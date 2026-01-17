@@ -79,18 +79,18 @@ export function AboutSection() {
                             {t.about.bio}
                         </p>
 
-                        <div className="grid sm:grid-cols-2 gap-4 pt-4">
-                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                <div className="p-2 bg-secondary/50 rounded-full"><MapPin className="w-4 h-4" /></div>
-                                Bandar Lampung, Indonesia
+                        <div className="grid gap-3 pt-4">
+                            <div className="flex items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+                                <div className="p-2 bg-secondary/50 rounded-full shrink-0"><MapPin className="w-4 h-4" /></div>
+                                <span className="break-words">Bandar Lampung, Indonesia</span>
                             </div>
-                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                <div className="p-2 bg-secondary/50 rounded-full"><Mail className="w-4 h-4" /></div>
-                                daffamalfatih.3135@gmail.com
+                            <div className="flex items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+                                <div className="p-2 bg-secondary/50 rounded-full shrink-0"><Mail className="w-4 h-4" /></div>
+                                <span className="break-all">daffamalfatih.3135@gmail.com</span>
                             </div>
-                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                <div className="p-2 bg-secondary/50 rounded-full"><Phone className="w-4 h-4" /></div>
-                                +62 857 8991 9805
+                            <div className="flex items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+                                <div className="p-2 bg-secondary/50 rounded-full shrink-0"><Phone className="w-4 h-4" /></div>
+                                <span className="break-words">+62 857 8991 9805</span>
                             </div>
                         </div>
                     </motion.div>
