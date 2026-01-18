@@ -18,6 +18,23 @@ interface ExperienceClientProps {
     experiences: Experience[]
 }
 
+// Helper to parse description - handles both old text format and new bullet format
+function parseDescription(description: string): { text: string; bullets: string[] } {
+    if (!description) return { text: "", bullets: [] }
+
+    try {
+        const parsed = JSON.parse(description)
+        if (parsed.text !== undefined && parsed.bullets !== undefined) {
+            return parsed
+        }
+    } catch {
+        // Old format - plain text
+        return { text: description, bullets: [] }
+    }
+
+    return { text: description, bullets: [] }
+}
+
 export function ExperienceClient({ experiences }: ExperienceClientProps) {
     const { t } = useLanguage()
     const experiencesContainerRef = useRef(null)
@@ -25,7 +42,7 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
 
     return (
         <section id="experience" className="min-h-screen flex flex-col justify-center py-24 px-4 container mx-auto">
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-5xl mx-auto w-full">
                 <motion.div
                     initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
                     whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -41,12 +58,12 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
                     </p>
                 </motion.div>
 
-                <div className="max-w-3xl mx-auto relative">
+                <div className="w-full relative">
                     {/* Vertical line - animated gradient glow, hidden when no experiences */}
                     {experiences.length > 0 && (
                         <motion.div
                             initial={{ height: 0 }}
-                            animate={{ height: isInView ? "calc(100% - 17rem)" : 0 }}
+                            animate={{ height: isInView ? "calc(100% - 15.5rem)" : 0 }}
                             transition={{ duration: 1.5, ease: "easeInOut" }}
                             className="absolute left-0 md:left-1/2 -translate-x-1/2 hidden md:block origin-top"
                             style={{
@@ -74,6 +91,8 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
                     <div ref={experiencesContainerRef} className="space-y-12">
                         {experiences.map((exp, index) => {
                             const isEven = index % 2 === 0
+                            const desc = parseDescription(exp.description)
+
                             return (
                                 <motion.div
                                     key={exp.id}
@@ -114,9 +133,25 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
                                             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
                                             <h3 className="text-xl font-bold">{exp.position}</h3>
                                             <p className="text-lg text-primary font-medium">{exp.company}</p>
-                                            <p className="mt-4 text-muted-foreground leading-relaxed whitespace-pre-line">
-                                                {exp.description}
-                                            </p>
+
+                                            {/* Description Text */}
+                                            {desc.text && (
+                                                <p className="mt-4 text-muted-foreground leading-relaxed whitespace-pre-line">
+                                                    {desc.text}
+                                                </p>
+                                            )}
+
+                                            {/* Bullet Points */}
+                                            {desc.bullets.length > 0 && (
+                                                <ul className="mt-4 space-y-2">
+                                                    {desc.bullets.map((bullet, i) => (
+                                                        <li key={i} className="flex items-start gap-2 text-muted-foreground">
+                                                            <span className="text-primary mt-1.5 text-xs">●</span>
+                                                            <span className="leading-relaxed">{bullet}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
                                         </div>
                                     </div>
                                 </motion.div>
@@ -152,3 +187,4 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
         </section>
     )
 }
+

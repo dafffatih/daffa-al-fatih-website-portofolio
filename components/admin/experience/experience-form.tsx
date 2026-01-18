@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { ArrowLeft, Loader2 } from "lucide-react"
+import { ArrowLeft, Loader2, Plus, Trash2, GripVertical } from "lucide-react"
 import Link from "next/link"
 
 import { DatePicker } from "@/components/ui/date-picker"
@@ -17,23 +17,51 @@ interface ExperienceFormProps {
     isEditing?: boolean
 }
 
+// Helper to parse description - handles both old text format and new bullet format
+function parseDescription(description: string): { text: string; bullets: string[] } {
+    if (!description) return { text: "", bullets: [] }
+
+    try {
+        const parsed = JSON.parse(description)
+        if (parsed.text !== undefined && parsed.bullets !== undefined) {
+            return parsed
+        }
+    } catch {
+        // Old format - plain text, try to extract bullets
+        const lines = description.split('\n')
+        const bullets: string[] = []
+        const textLines: string[] = []
+
+        lines.forEach(line => {
+            const trimmed = line.trim()
+            if (trimmed.startsWith('• ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+                bullets.push(trimmed.substring(2))
+            } else if (trimmed) {
+                textLines.push(trimmed)
+            }
+        })
+
+        return { text: textLines.join('\n'), bullets }
+    }
+
+    return { text: description, bullets: [] }
+}
+
 export function ExperienceForm({ initialData, isEditing = false }: ExperienceFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
 
-    // Format dates for input[type="date"]
-    const formatDate = (date: Date | string | null) => {
-        if (!date) return ""
-        return new Date(date).toISOString().split('T')[0]
-    }
+    // Parse initial description
+    const initialDesc = parseDescription(initialData?.description || "")
 
     const [formData, setFormData] = useState({
         position: initialData?.position || "",
         company: initialData?.company || "",
-        startDate: initialData?.startDate || "", // Store as string or Date directly
+        startDate: initialData?.startDate || "",
         endDate: initialData?.endDate || "",
         current: !initialData?.endDate && isEditing ? true : false,
-        description: initialData?.description || "",
+        descriptionText: initialDesc.text,
+        bullets: initialDesc.bullets.length > 0 ? initialDesc.bullets : [""],
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -52,7 +80,30 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
         setFormData((prev) => ({
             ...prev,
             current: checked,
-            endDate: checked ? "" : prev.endDate // Clear end date if current
+            endDate: checked ? "" : prev.endDate
+        }))
+    }
+
+    // Bullet point handlers
+    const handleBulletChange = (index: number, value: string) => {
+        setFormData((prev) => {
+            const newBullets = [...prev.bullets]
+            newBullets[index] = value
+            return { ...prev, bullets: newBullets }
+        })
+    }
+
+    const addBullet = () => {
+        setFormData((prev) => ({
+            ...prev,
+            bullets: [...prev.bullets, ""]
+        }))
+    }
+
+    const removeBullet = (index: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            bullets: prev.bullets.filter((_, i) => i !== index)
         }))
     }
 
@@ -67,14 +118,19 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
 
             const method = isEditing ? "PATCH" : "POST"
 
+            // Combine text and bullets into JSON description
+            const description = JSON.stringify({
+                text: formData.descriptionText,
+                bullets: formData.bullets.filter(b => b.trim() !== "")
+            })
+
             const payload = {
-                ...formData,
+                position: formData.position,
+                company: formData.company,
+                description,
                 endDate: formData.current ? null : formData.endDate ? new Date(formData.endDate) : null,
                 startDate: new Date(formData.startDate)
             }
-            // Remove 'current' helper field from payload
-            // @ts-ignore
-            delete payload.current
 
             const res = await fetch(url, {
                 method,
@@ -160,16 +216,59 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="descriptionText">Description (Summary)</Label>
                     <Textarea
-                        id="description"
-                        name="description"
-                        value={formData.description}
+                        id="descriptionText"
+                        name="descriptionText"
+                        value={formData.descriptionText}
                         onChange={handleChange}
-                        required
-                        placeholder="Key responsibilities and achievements..."
-                        className="min-h-[150px]"
+                        placeholder="Brief overview of your role..."
+                        className="min-h-[80px]"
                     />
+                </div>
+
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <Label>Key Achievements / Responsibilities (Bullet Points)</Label>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={addBullet}
+                            className="gap-1"
+                        >
+                            <Plus className="w-4 h-4" /> Add Point
+                        </Button>
+                    </div>
+
+                    <div className="space-y-2">
+                        {formData.bullets.map((bullet, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                <GripVertical className="w-4 h-4 text-muted-foreground/50" />
+                                <span className="text-muted-foreground">•</span>
+                                <Input
+                                    value={bullet}
+                                    onChange={(e) => handleBulletChange(index, e.target.value)}
+                                    placeholder={`Achievement or responsibility ${index + 1}...`}
+                                    className="flex-1"
+                                />
+                                {formData.bullets.length > 1 && (
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeBullet(index)}
+                                        className="text-destructive hover:text-destructive"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        Add bullet points to highlight key achievements or responsibilities.
+                    </p>
                 </div>
             </div>
 
@@ -180,3 +279,4 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
         </form>
     )
 }
+
