@@ -7,18 +7,18 @@ const prisma = new PrismaClient()
 console.log("Seeding database...")
 
 async function main() {
-    const email = "admin@example.com"
-    const password = "admin123"
+    const username = "dafffatih_"
+    const password = "Chacedievv3135*"
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const user = await prisma.user.upsert({
-        where: { email },
+        where: { username },
         update: {
             password: hashedPassword,
         },
         create: {
-            email,
+            username,
             name: "Admin",
             password: hashedPassword,
         },
@@ -36,3 +36,4 @@ main()
         await prisma.$disconnect()
         process.exit(1)
     })
+

@@ -73,7 +73,7 @@ export function SkillsClient({ skills }: SkillsClientProps) {
                                                             <img
                                                                 src={skill.icon}
                                                                 alt={skill.name}
-                                                                className="w-5 h-5 object-contain"
+                                                                className="w-6 h-6 object-contain"
                                                                 onError={(e) => {
                                                                     (e.target as HTMLImageElement).style.display = 'none'
                                                                 }}

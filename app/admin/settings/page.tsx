@@ -7,10 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label"
 import { Save, Lock, Loader2 } from "lucide-react"
 import { updateAdminProfile } from "@/actions/admin-settings"
-// import { useLanguage } from "@/components/providers/language-provider" // Assuming this might not exist yet or causes issues if not imported correctly
 
 export default function SettingsPage() {
-    // const { t } = useLanguage()
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState<{ type: "success" | "error", text: string } | null>(null)
 
@@ -26,8 +24,10 @@ export default function SettingsPage() {
             setMessage({ type: "error", text: result.error })
         } else if (result.success) {
             setMessage({ type: "success", text: result.success as string })
-            // Optional: reset password fields
-            e.currentTarget.reset()
+            // Reset password fields only
+            const form = e.currentTarget
+            const passwordFields = form.querySelectorAll('input[type="password"]')
+            passwordFields.forEach((field: any) => field.value = '')
         }
 
         setLoading(false)
@@ -60,13 +60,12 @@ export default function SettingsPage() {
                             )}
 
                             <div className="space-y-2">
-                                <Label htmlFor="email">Email Address</Label>
+                                <Label htmlFor="username">Username</Label>
                                 <Input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    placeholder="admin@example.com"
-                                    defaultValue="admin@example.com"
+                                    id="username"
+                                    name="username"
+                                    type="text"
+                                    placeholder="Enter your username"
                                     required
                                 />
                             </div>
@@ -114,3 +113,4 @@ export default function SettingsPage() {
         </div>
     )
 }
+

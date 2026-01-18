@@ -88,8 +88,8 @@ export const id = {
         }
     },
     skills: {
-        title: "Arsenalis Teknis",
-        subtitle: "Alat dan teknologi yang saya gunakan untuk menciptakan pengalaman digital.",
+        title: "Keahlian & Kemampuan Teknis",
+        subtitle: "Keahlian dan teknologi yang digunakan untuk membangun solusi web yang skalabel.",
         noSkills: "Belum ada keahlian yang ditambahkan.",
     },
     projects: {

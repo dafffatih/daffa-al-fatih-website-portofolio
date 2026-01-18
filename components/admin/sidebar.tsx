@@ -30,10 +30,9 @@ export function AdminSidebar() {
     const pathname = usePathname()
 
     const handleSignOut = async () => {
-        await signOut({
-            callbackUrl: "/login",
-            redirect: true
-        })
+        await signOut({ redirect: false })
+        // Use window.location to ensure correct domain
+        window.location.href = "/login"
     }
 
     return (

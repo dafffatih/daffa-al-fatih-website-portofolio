@@ -8,18 +8,18 @@ import bcrypt from "bcryptjs"
 export async function updateAdminProfile(formData: FormData) {
     const session = await auth()
 
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
         return { error: "Unauthorized" }
     }
 
-    const currentEmail = session.user.email
-    const newEmail = formData.get("email") as string
+    const userId = session.user.id
+    const newUsername = formData.get("username") as string
     const currentPassword = formData.get("currentPassword") as string
     const newPassword = formData.get("newPassword") as string
     const confirmPassword = formData.get("confirmPassword") as string
 
-    if (!newEmail || !currentPassword) {
-        return { error: "Email and current password are required" }
+    if (!newUsername || !currentPassword) {
+        return { error: "Username and current password are required" }
     }
 
     if (newPassword && newPassword !== confirmPassword) {
@@ -27,9 +27,9 @@ export async function updateAdminProfile(formData: FormData) {
     }
 
     try {
-        // Verify current password
+        // Verify current password using user ID
         const user = await prisma.user.findUnique({
-            where: { email: currentEmail }
+            where: { id: userId }
         })
 
         if (!user || !user.password) {
@@ -42,9 +42,19 @@ export async function updateAdminProfile(formData: FormData) {
             return { error: "Incorrect current password" }
         }
 
+        // Check if username is already taken by another user
+        if (newUsername !== user.username) {
+            const existingUser = await prisma.user.findUnique({
+                where: { username: newUsername }
+            })
+            if (existingUser) {
+                return { error: "Username is already taken" }
+            }
+        }
+
         // Prepare update data
         const updateData: any = {
-            email: newEmail
+            username: newUsername
         }
 
         if (newPassword) {
@@ -52,7 +62,7 @@ export async function updateAdminProfile(formData: FormData) {
         }
 
         await prisma.user.update({
-            where: { email: currentEmail },
+            where: { id: userId },
             data: updateData
         })
 
@@ -63,3 +73,4 @@ export async function updateAdminProfile(formData: FormData) {
         return { error: "Failed to update profile" }
     }
 }
+

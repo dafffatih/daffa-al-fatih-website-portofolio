@@ -36,6 +36,7 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
+  username      String    @unique
   email         String?   @unique
   password      String?
   emailVerified DateTime?
@@ -71,6 +72,7 @@ model Skill {
   category    String
   icon        String?
   proficiency Int
+  order       Int      @default(0)
   createdAt   DateTime @default(now())
 }
 
@@ -107,7 +109,7 @@ model Message {
 
 model LoginAttempt {
   id          String    @id
-  email       String    @unique
+  username    String    @unique
   failedCount Int       @default(0)
   lockUntil   DateTime?
   delayLevel  Int       @default(1)

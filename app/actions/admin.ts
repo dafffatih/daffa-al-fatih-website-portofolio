@@ -72,3 +72,22 @@ export async function deleteMessage(id: string) {
         return { success: false, error: "Failed to delete message" }
     }
 }
+
+export async function updateSkillsOrder(items: { id: string; order: number }[]) {
+    try {
+        await Promise.all(
+            items.map((item) =>
+                prisma.skill.update({
+                    where: { id: item.id },
+                    data: { order: item.order },
+                })
+            )
+        )
+        revalidatePath("/admin/skills")
+        revalidatePath("/")
+        return { success: true }
+    } catch (error) {
+        console.error("Failed to update skills order:", error)
+        return { success: false, error: "Failed to update skills order" }
+    }
+}

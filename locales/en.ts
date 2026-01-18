@@ -88,8 +88,8 @@ export const en = {
         }
     },
     skills: {
-        title: "Technical Arsenal",
-        subtitle: "Tools and technologies I use to craft digital experiences.",
+        title: "Technical Skills & Capabilities",
+        subtitle: "Skills and technologies used to build scalable web solutions.",
         noSkills: "No skills added yet.",
     },
     projects: {

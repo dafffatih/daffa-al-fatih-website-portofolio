@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { ExternalLink } from "lucide-react"
 
 export default function LoginPage() {
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [rememberMe, setRememberMe] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -24,7 +24,7 @@ export default function LoginPage() {
         try {
             const result = await signIn("credentials", {
                 redirect: false,
-                email,
+                username,
                 password,
             })
 
@@ -51,12 +51,12 @@ export default function LoginPage() {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium leading-none" htmlFor="email">Email</label>
+                        <label className="text-sm font-medium leading-none" htmlFor="username">Username</label>
                         <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             required
                         />
@@ -95,7 +95,6 @@ export default function LoginPage() {
                 </form>
 
                 <div className="pt-4 text-center border-t border-border mt-4">
-                    <p className="text-xs text-muted-foreground mb-4">Demo Credentials: admin@example.com / admin123</p>
                     <Button variant="outline" className="w-full gap-2" onClick={() => router.push('/')}>
                         <ExternalLink className="w-4 h-4" /> Back to Website
                     </Button>
@@ -104,3 +103,4 @@ export default function LoginPage() {
         </div>
     )
 }
+
