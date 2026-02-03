@@ -1,12 +1,7 @@
 "use client"
 
-import { useEffect, useState, useRef, useMemo } from "react"
-import { motion } from "framer-motion"
-
-interface MousePosition {
-    x: number
-    y: number
-}
+import { useEffect, useMemo } from "react"
+import { motion, useMotionValue, useSpring } from "framer-motion"
 
 interface LightParticle {
     id: number
@@ -24,30 +19,37 @@ interface GradientLayer {
     size: number
     x: number
     y: number
-    blur: number
+    size: number
+    x: number
+    y: number
 }
 
 export function GradientParticles() {
-    const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 })
-    const [trailPositions, setTrailPositions] = useState<MousePosition[]>(
-        Array(12).fill({ x: 0, y: 0 })
-    )
-    const animationRef = useRef<number | null>(null)
+    // Replace useState with useMotionValue for performance
+    // This avoids re-rendering the reactant component on every mouse move
+    const mouseX = useMotionValue(0)
+    const mouseY = useMotionValue(0)
+
+    // Smooth springs for the first element
+    const springConfig = { damping: 25, stiffness: 150, mass: 0.5 }
+    const springX = useSpring(mouseX, springConfig)
+    const springY = useSpring(mouseY, springConfig)
 
     // Layered gradient backgrounds for depth - MORE VISIBLE with vibrant colors
+    // Memoized to prevent recreation on re-renders (though we shouldn't be re-rendering much now)
     const gradientLayers = useMemo<GradientLayer[]>(() => [
         // Deep purple/pink like reference image 1
-        { id: 1, color: "rgba(219, 39, 119, 0.45)", size: 900, x: -10, y: -5, blur: 100 },
+        { id: 1, color: "rgba(219, 39, 119, 0.45)", size: 900, x: -10, y: -5 },
         // Coral/orange glow
-        { id: 2, color: "rgba(251, 146, 60, 0.35)", size: 700, x: 70, y: 5, blur: 90 },
+        { id: 2, color: "rgba(251, 146, 60, 0.35)", size: 700, x: 70, y: 5 },
         // Deep blue like reference image 2
-        { id: 3, color: "rgba(59, 130, 246, 0.40)", size: 1000, x: 50, y: 40, blur: 110 },
+        { id: 3, color: "rgba(59, 130, 246, 0.40)", size: 1000, x: 50, y: 40 },
         // Magenta/pink accent
-        { id: 4, color: "rgba(236, 72, 153, 0.38)", size: 800, x: 80, y: 60, blur: 95 },
+        { id: 4, color: "rgba(236, 72, 153, 0.38)", size: 800, x: 80, y: 60 },
         // Purple depth
-        { id: 5, color: "rgba(139, 92, 246, 0.42)", size: 850, x: 20, y: 70, blur: 100 },
+        { id: 5, color: "rgba(139, 92, 246, 0.42)", size: 850, x: 20, y: 70 },
         // Cyan/teal accent like reference image 3
-        { id: 6, color: "rgba(34, 211, 238, 0.30)", size: 600, x: 40, y: 20, blur: 80 },
+        { id: 6, color: "rgba(34, 211, 238, 0.30)", size: 600, x: 40, y: 20 },
     ], [])
 
     // Small floating light particles
@@ -72,50 +74,22 @@ export function GradientParticles() {
         }))
     }, [])
 
-    // Mouse tracking
+    // Mouse tracking - ONLY updates motion values, no state updates
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
-            setMousePosition({ x: e.clientX, y: e.clientY })
+            mouseX.set(e.clientX)
+            mouseY.set(e.clientY)
         }
 
         window.addEventListener("mousemove", handleMouseMove)
         return () => window.removeEventListener("mousemove", handleMouseMove)
-    }, [])
+    }, [mouseX, mouseY])
 
-    // Smooth lerp animation for mouse follower with trail
-    useEffect(() => {
-        const lerp = (start: number, end: number, factor: number) => {
-            return start + (end - start) * factor
-        }
-
-        const animate = () => {
-            setTrailPositions(prev => {
-                const newPositions = [...prev]
-                // First position follows mouse directly with NO delay
-                newPositions[0] = {
-                    x: mousePosition.x,
-                    y: mousePosition.y
-                }
-                // Each subsequent position follows the one before it with decreasing speed
-                for (let i = 1; i < newPositions.length; i++) {
-                    const speed = Math.max(0.25 - i * 0.012, 0.08) // Faster speed for tighter trail
-                    newPositions[i] = {
-                        x: lerp(prev[i].x, newPositions[i - 1].x, speed),
-                        y: lerp(prev[i].y, newPositions[i - 1].y, speed)
-                    }
-                }
-                return newPositions
-            })
-            animationRef.current = requestAnimationFrame(animate)
-        }
-
-        animationRef.current = requestAnimationFrame(animate)
-        return () => {
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current)
-            }
-        }
-    }, [mousePosition])
+    // Create a trail of springs
+    // managing array of springs is tricky in hooks, so we create a small component helper
+    // or just map a fixed number since we know it's 12
+    const trailCount = 6
+    const trails = Array.from({ length: trailCount }).map((_, i) => i)
 
     return (
         <>
@@ -130,8 +104,7 @@ export function GradientParticles() {
                             height: layer.size,
                             left: `${layer.x}%`,
                             top: `${layer.y}%`,
-                            background: `radial-gradient(circle, ${layer.color} 0%, transparent 70%)`,
-                            filter: `blur(${layer.blur}px)`,
+                            background: `radial-gradient(circle, ${layer.color} 0%, transparent 60%)`,
                         }}
                         animate={{
                             x: [0, 150, -100, 200, -50, 0],
@@ -178,35 +151,59 @@ export function GradientParticles() {
             </div>
 
             {/* Mouse follower gradient with trail effect */}
-            {trailPositions.map((pos, index) => {
-                const size = Math.max(200 - index * 12, 60) // Decreasing size for trail, min 60px
-                const opacity = Math.max(0.15 - index * 0.010, 0.02) // Decreasing opacity for trail
-                const blur = 35 + index * 3 // Increasing blur for trail
-
-                return (
-                    <motion.div
-                        key={`trail-${index}`}
-                        className="fixed pointer-events-none z-[1]"
-                        style={{
-                            left: pos.x - size / 2,
-                            top: pos.y - size / 2,
-                        }}
-                    >
-                        <div
-                            className="rounded-full"
-                            style={{
-                                width: size,
-                                height: size,
-                                background: index === 0
-                                    ? "radial-gradient(circle, rgba(244,114,182,0.15) 0%, rgba(192,132,252,0.10) 40%, transparent 70%)"
-                                    : `radial-gradient(circle, rgba(192,132,252,${opacity}) 0%, rgba(139,92,246,${opacity * 0.6}) 40%, transparent 70%)`,
-                                filter: `blur(${blur}px)`,
-                            }}
-                        />
-                    </motion.div>
-                )
-            })}
+            {trails.map((i) => (
+                <TrailItem
+                    key={i}
+                    index={i}
+                    mouseX={mouseX}
+                    mouseY={mouseY}
+                />
+            ))}
         </>
     )
 }
 
+function TrailItem({ index, mouseX, mouseY }: { index: number, mouseX: any, mouseY: any }) {
+    // Create a unique spring for each trail item, with increasing delay/lag
+    // We achieve "lag" by making the spring softer (lower stiffness, higher damping) as index increases
+    const springConfig = useMemo(() => ({
+        damping: 25 + index * 5,
+        stiffness: Math.max(150 - index * 10, 50),
+        mass: 0.5 + index * 0.1
+    }), [index])
+
+    const x = useSpring(mouseX, springConfig)
+    const y = useSpring(mouseY, springConfig)
+
+    const size = Math.max(300 - index * 20, 100) // Increased size: Wide but thin
+    const opacity = Math.max(0.04 - index * 0.005, 0.005) // Even fainter opacity
+
+
+    // Gradient definitions
+    const background = index === 0
+        ? "radial-gradient(circle, rgba(244,114,182,0.15) 0%, rgba(192,132,252,0.10) 40%, transparent 70%)"
+        : `radial-gradient(circle, rgba(192,132,252,${opacity}) 0%, rgba(139,92,246,${opacity * 0.6}) 40%, transparent 70%)`
+
+    return (
+        <motion.div
+            className="fixed pointer-events-none z-[1]"
+            style={{
+                left: 0,
+                top: 0,
+                x, // Framer motion optimizes this to transform: translateX
+                y, // Framer motion optimizes this to transform: translateY
+                translateX: "-50%", // Center the div on the coordinate
+                translateY: "-50%",
+            }}
+        >
+            <div
+                className="rounded-full"
+                style={{
+                    width: size,
+                    height: size,
+                    background,
+                }}
+            />
+        </motion.div>
+    )
+}

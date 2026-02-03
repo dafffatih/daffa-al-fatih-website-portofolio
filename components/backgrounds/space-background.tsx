@@ -9,7 +9,7 @@ function StarField(props: any) {
     const ref = useRef<any>(null)
 
     const [positions] = useMemo(() => {
-        const count = 3000
+        const count = 1500
         const positions = new Float32Array(count * 3)
         for (let i = 0; i < count; i++) {
             const r = 1.2 * Math.cbrt(Math.random())
