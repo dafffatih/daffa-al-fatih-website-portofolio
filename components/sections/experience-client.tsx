@@ -130,10 +130,17 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
                                         </div>
 
                                         <div className="relative group">
-                                            {/* Glow effect */}
-                                            <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                            {/* Glow effect - border/frame only */}
+                                            {/* Top edge */}
+                                            <div className="absolute -top-1 -left-0.5 -right-0.5 h-2 bg-gradient-to-r from-pink-600 to-purple-600 rounded-t-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                            {/* Bottom edge */}
+                                            <div className="absolute -bottom-1 -left-0.5 -right-0.5 h-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-b-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                            {/* Left edge */}
+                                            <div className="absolute -left-1 -top-0.5 -bottom-0.5 w-2 bg-gradient-to-b from-pink-600 to-purple-600 rounded-l-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                            {/* Right edge */}
+                                            <div className="absolute -right-1 -top-0.5 -bottom-0.5 w-2 bg-gradient-to-b from-purple-600 to-pink-600 rounded-r-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
 
-                                            <div className="bg-card p-6 rounded-lg relative">
+                                            <div className="bg-card/80 backdrop-blur-sm p-6 rounded-lg relative border-muted/50">
                                                 <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
                                                 <h3 className="text-xl font-bold">{exp.position}</h3>
                                                 <p className="text-lg text-primary font-medium">{exp.company}</p>

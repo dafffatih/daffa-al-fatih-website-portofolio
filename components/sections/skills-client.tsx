@@ -58,7 +58,7 @@ export function SkillsClient({ skills }: SkillsClientProps) {
                                 {/* Decorative blur */}
                                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl blur-lg transition duration-500 group-hover:duration-200" />
 
-                                <Card className="relative bg-card/50 backdrop-blur-sm border-white/10 h-full">
+                                <Card className="relative bg-card/80 backdrop-blur-sm border-muted/50 h-full">
                                     <CardHeader>
                                         <CardTitle className="text-xl font-bold text-primary tracking-wide uppercase text-sm">
                                             {category}

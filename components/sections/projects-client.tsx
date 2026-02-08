@@ -63,11 +63,18 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                                 onMouseEnter={() => setHoveredProject(project.id)}
                                 onMouseLeave={() => setHoveredProject(null)}
                             >
-                                {/* Glow effect */}
-                                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                {/* Glow effect - border/frame only */}
+                                {/* Top edge */}
+                                <div className="absolute -top-1 -left-0.5 -right-0.5 h-2 bg-gradient-to-r from-pink-600 to-purple-600 rounded-t-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                {/* Bottom edge */}
+                                <div className="absolute -bottom-1 -left-0.5 -right-0.5 h-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-b-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                {/* Left edge */}
+                                <div className="absolute -left-1 -top-0.5 -bottom-0.5 w-2 bg-gradient-to-b from-pink-600 to-purple-600 rounded-l-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                {/* Right edge */}
+                                <div className="absolute -right-1 -top-0.5 -bottom-0.5 w-2 bg-gradient-to-b from-purple-600 to-pink-600 rounded-r-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
 
                                 <Card
-                                    className="relative h-full flex flex-col bg-card border-muted/50 overflow-hidden hover:scale-[1.02] transition-transform duration-300"
+                                    className="relative h-full flex flex-col bg-card/80 backdrop-blur-sm border-muted/50 overflow-hidden hover:scale-[1.02] transition-transform duration-300"
                                 >
                                     <div className="aspect-video w-full bg-muted overflow-hidden relative">
                                         {/* Video / Image Logic */}

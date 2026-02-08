@@ -82,12 +82,6 @@ export function GradientParticles() {
         return () => window.removeEventListener("mousemove", handleMouseMove)
     }, [mouseX, mouseY])
 
-    // Create a trail of springs
-    // managing array of springs is tricky in hooks, so we create a small component helper
-    // or just map a fixed number since we know it's 12
-    const trailCount = 6
-    const trails = Array.from({ length: trailCount }).map((_, i) => i)
-
     return (
         <>
             {/* Layered gradient backgrounds for depth */}
@@ -146,16 +140,6 @@ export function GradientParticles() {
                     />
                 ))}
             </div>
-
-            {/* Mouse follower gradient with trail effect */}
-            {trails.map((i) => (
-                <TrailItem
-                    key={i}
-                    index={i}
-                    mouseX={mouseX}
-                    mouseY={mouseY}
-                />
-            ))}
         </>
     )
 }
